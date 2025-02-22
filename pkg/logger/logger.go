@@ -3,17 +3,20 @@ package logger
 import (
 	"github.com/charmbracelet/log"
 	"go.uber.org/fx"
+	"go.uber.org/fx/fxevent"
+	"log/slog"
 	"os"
 	"strings"
 	"weather-cache/config"
 )
 
 var Module = fx.Options(
-	fx.Provide(New),
+	fx.Provide(NewLogger),
+	fx.WithLogger(NewFxLogger),
 )
 
 type Logger struct {
-	*log.Logger
+	*slog.Logger
 }
 
 func (l *Logger) Write(p []byte) (n int, err error) {
@@ -21,7 +24,7 @@ func (l *Logger) Write(p []byte) (n int, err error) {
 	return len(p), nil
 }
 
-func New(config config.Config) Logger {
+func NewLogger(config config.Config) Logger {
 	level := log.InfoLevel
 	switch strings.ToLower(config.LogLevel) {
 	case "debug":
@@ -70,6 +73,13 @@ func New(config config.Config) Logger {
 	logger.Info("Logger initialized", "level", config.LogLevel)
 
 	return Logger{
-		Logger: logger,
+		Logger: slog.New(logger),
+	}
+}
+
+// NewFxLogger создает логгер для использования в fx
+func NewFxLogger(l Logger) fxevent.Logger {
+	return &fxevent.SlogLogger{
+		Logger: l.Logger.With("source", "fx"),
 	}
 }
