@@ -1,18 +1,28 @@
 package main
 
 import (
+	"context"
+	"fmt"
 	"go.uber.org/fx"
+	"os"
+	"os/signal"
+	"syscall"
 	"weather-cache/config"
 	"weather-cache/internal/api/controller"
 	"weather-cache/internal/api/handler"
+	"weather-cache/internal/api/routes"
 	"weather-cache/internal/cache"
 	"weather-cache/internal/infrastructure/providers"
+	"weather-cache/internal/server"
 	"weather-cache/internal/services/maps"
 	"weather-cache/internal/services/weather"
 	"weather-cache/pkg/logger"
 )
 
 func main() {
+	stop := make(chan os.Signal, 1)
+	signal.Notify(stop, syscall.SIGINT, syscall.SIGTERM)
+
 	app := fx.New(
 		config.Module,
 		logger.Module,
@@ -22,16 +32,20 @@ func main() {
 		providers.Module,
 		controller.Module,
 		handler.Module,
-		fx.Invoke(func(log logger.Logger, r handler.RequestHandler) {
-			log.Info("Starting the application")
-
-			err := r.Start("localhost:8080")
-			if err != nil {
-				log.Error("Failed to start the server", "error", err)
-				return
-			}
-		}),
+		fx.Invoke(routes.Setup),
+		fx.Invoke(server.Serve),
 	)
 
-	app.Run()
+	go func() {
+		if err := app.Start(context.Background()); err != nil {
+			fmt.Println("Error starting app:", err)
+		}
+	}()
+
+	<-stop
+
+	err := app.Stop(context.Background())
+	if err != nil {
+		fmt.Println("Error stopping app:", err)
+	}
 }
