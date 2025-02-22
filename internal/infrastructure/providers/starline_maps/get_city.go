@@ -17,7 +17,7 @@ func (a API) GetCityByCoords(ctx context.Context, lat, lon float64) (city string
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, endpoint, nil)
 	if err != nil {
-		a.log.Error("failed to create request", "error", err)
+		a.log.Error("failed to create request", a.log.Err(err))
 		return "", errors.Join(constants.ErrRemoteServerOut, err)
 	}
 
@@ -25,13 +25,13 @@ func (a API) GetCityByCoords(ctx context.Context, lat, lon float64) (city string
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
-		a.log.Error("failed to send request", "error", err)
+		a.log.Error("failed to send request", a.log.Err(err))
 		return "", errors.Join(constants.ErrRemoteServerOut, err)
 	}
 	defer func(Body io.ReadCloser) {
 		err := Body.Close()
 		if err != nil {
-			a.log.Error("failed to close response body", "error", err)
+			a.log.Error("failed to close response body", a.log.Err(err))
 		}
 	}(resp.Body)
 
@@ -39,7 +39,7 @@ func (a API) GetCityByCoords(ctx context.Context, lat, lon float64) (city string
 
 	err = json.NewDecoder(resp.Body).Decode(&res)
 	if err != nil {
-		a.log.Error("failed to decode response", "error", err)
+		a.log.Error("failed to decode response", a.log.Err(err))
 		return "", errors.Join(constants.ErrConverting, err)
 	}
 
