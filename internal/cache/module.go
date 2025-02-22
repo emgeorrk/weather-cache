@@ -12,8 +12,8 @@ var Module = fx.Options(
 	fx.Provide(NewCache),
 )
 
-func NewCache(config config.Config) (domain.Cache, error) {
-	switch config.CacheType {
+func NewCache(config *config.Config) (domain.Cache, error) {
+	switch config.Cache.Type {
 	case "in-memory":
 		return inmemory.New(config), nil
 	default:

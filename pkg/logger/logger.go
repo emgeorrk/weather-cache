@@ -19,14 +19,14 @@ type Logger struct {
 	*slog.Logger
 }
 
-func (l *Logger) Write(p []byte) (n int, err error) {
+func (l Logger) Write(p []byte) (n int, err error) {
 	l.Info(string(p))
 	return len(p), nil
 }
 
-func NewLogger(config config.Config) Logger {
+func NewLogger(config *config.Config) Logger {
 	level := log.InfoLevel
-	switch strings.ToLower(config.LogLevel) {
+	switch strings.ToLower(config.Log.Level) {
 	case "debug":
 		level = log.DebugLevel
 	case "info":
@@ -38,7 +38,7 @@ func NewLogger(config config.Config) Logger {
 	}
 
 	formatter := log.TextFormatter
-	switch strings.ToLower(config.LogFormatter) {
+	switch strings.ToLower(config.Log.Formatter) {
 	case "json":
 		formatter = log.JSONFormatter
 	case "text":
@@ -48,36 +48,38 @@ func NewLogger(config config.Config) Logger {
 	}
 
 	sourceFormat := log.ShortCallerFormatter
-	if strings.ToLower(config.LogSourceFormat) == "long" {
+	if strings.ToLower(config.Log.SourceFormat) == "long" {
 		sourceFormat = log.LongCallerFormatter
 	}
 
 	log.Helper()
 
 	opts := log.Options{
-		ReportTimestamp: strings.ToLower(config.LogAddTimeStamp) == "yes",
-		TimeFormat:      config.LogTimeFormat,
+		ReportTimestamp: strings.ToLower(config.Log.AddTimestamp) == "yes",
+		TimeFormat:      config.Log.TimeFormat,
 		Level:           level,
-		Prefix:          config.LogPrefix,
-		ReportCaller:    strings.ToLower(config.LogAddSource) == "yes",
+		Prefix:          config.Log.Prefix,
+		ReportCaller:    strings.ToLower(config.Log.AddSource) == "yes",
 		CallerFormatter: sourceFormat,
 		Formatter:       formatter,
 	}
 
-	logger := log.NewWithOptions(os.Stderr, opts)
+	handler := log.NewWithOptions(os.Stderr, opts)
 
-	if config.LogLabel != "" {
-		logger = logger.With("label", config.LogLabel)
+	if config.Log.Label != "" {
+		handler = handler.With("label", config.Log.Label)
 	}
 
-	logger.Info("Logger initialized", "level", config.LogLevel)
+	logger := slog.New(handler)
+
+	logger.Info("Logger initialized", slog.String("level", config.Log.Level))
 
 	return Logger{
-		Logger: slog.New(logger),
+		Logger: logger,
 	}
 }
 
-// NewFxLogger создает логгер для использования в fx
+// NewFxLogger returns a new fxevent.Logger that logs to the provided logger.
 func NewFxLogger(l Logger) fxevent.Logger {
 	return &fxevent.SlogLogger{
 		Logger: l.Logger.With("source", "fx"),

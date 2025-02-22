@@ -12,8 +12,8 @@ type InMemoryCache struct {
 	ttl time.Duration
 }
 
-func New(config config.Config) *InMemoryCache {
-	ttl, _ := time.ParseDuration(config.CacheTTL)
+func New(config *config.Config) *InMemoryCache {
+	ttl, _ := time.ParseDuration(config.Cache.TTL)
 	if ttl == 0 {
 		ttl = constants.DefaultCacheTTL
 	}

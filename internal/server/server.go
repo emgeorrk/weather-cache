@@ -12,13 +12,13 @@ import (
 	"weather-cache/pkg/logger"
 )
 
-func Serve(lc fx.Lifecycle, log logger.Logger, r handler.RequestHandler, config config.Config) {
+func Serve(lc fx.Lifecycle, log logger.Logger, r handler.RequestHandler, config *config.Config) {
 	lc.Append(fx.Hook{
 		OnStart: func(ctx context.Context) error {
 			log.Info("Starting the application ☀️")
 
 			go func() {
-				err := r.Start(fmt.Sprintf("%s:%s", config.ServerHost, config.ServerPort))
+				err := r.Start(fmt.Sprintf("%s:%s", config.Server.Host, config.Server.Port))
 				if err != nil && !errors.Is(err, http.ErrServerClosed) {
 					log.Error("Failed to start the server", "error", err)
 				}

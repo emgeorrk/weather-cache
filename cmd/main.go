@@ -36,6 +36,10 @@ func main() {
 		fx.Invoke(server.Serve),
 	)
 
+	if err := app.Err(); err != nil {
+		os.Exit(1)
+	}
+
 	go func() {
 		if err := app.Start(context.Background()); err != nil {
 			fmt.Println("Error starting app:", err)

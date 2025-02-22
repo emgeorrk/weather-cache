@@ -15,18 +15,18 @@ var Module = fx.Options(
 	fx.Provide(NewMapsProvider),
 )
 
-func NewWeatherProvider(log logger.Logger, config config.Config) (domain.WeatherProvider, error) {
-	switch config.WeatherAPIType {
-	case "gismeteo":
+func NewWeatherProvider(log logger.Logger, config *config.Config) (domain.WeatherProvider, error) {
+	switch config.Weather.APIType {
+	case constants.GismeteoProvider:
 		return gismeteo.New(log, config), nil
 	default:
 		return nil, constants.ErrWeatherAPITypeNotSupported
 	}
 }
 
-func NewMapsProvider(log logger.Logger, config config.Config) (domain.MapsProvider, error) {
-	switch config.MapsAPIType {
-	case "starline_maps":
+func NewMapsProvider(log logger.Logger, config *config.Config) (domain.MapsProvider, error) {
+	switch config.Maps.APIType {
+	case constants.StarLineMapsProvider:
 		return starline_maps.New(log, config), nil
 	default:
 		return nil, constants.ErrMapsAPITypeNotSupported

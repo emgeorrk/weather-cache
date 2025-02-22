@@ -16,7 +16,7 @@ type RequestHandler struct {
 	*echo.Echo
 }
 
-func NewRequestHandler(lg logger.Logger, config config.Config) RequestHandler {
+func NewRequestHandler(lg logger.Logger, config *config.Config) RequestHandler {
 	e := echo.New()
 
 	e.Use(logger.EchoMiddleware(lg))
