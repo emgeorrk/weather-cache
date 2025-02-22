@@ -11,13 +11,13 @@ var Module = fx.Options(
 )
 
 type Controller struct {
-	logger         logger.Logger
+	log            logger.Logger
 	weatherService domain.WeatherService
 }
 
 func NewController(log logger.Logger, weather domain.WeatherService) Controller {
 	return Controller{
-		logger:         log,
+		log:            log,
 		weatherService: weather,
 	}
 }

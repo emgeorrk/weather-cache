@@ -20,7 +20,7 @@ func Serve(lc fx.Lifecycle, log logger.Logger, r handler.RequestHandler, config 
 			go func() {
 				err := r.Start(fmt.Sprintf("%s:%s", config.Server.Host, config.Server.Port))
 				if err != nil && !errors.Is(err, http.ErrServerClosed) {
-					log.Error("Failed to start the server", "error", err)
+					log.Error("Failed to start the server", log.Err(err))
 				}
 			}()
 
