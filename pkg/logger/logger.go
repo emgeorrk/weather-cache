@@ -3,7 +3,6 @@ package logger
 import (
 	"github.com/charmbracelet/log"
 	"go.uber.org/fx"
-	"go.uber.org/fx/fxevent"
 	"log/slog"
 	"os"
 	"strings"
@@ -72,16 +71,9 @@ func NewLogger(config *config.Config) Logger {
 
 	logger := slog.New(handler)
 
-	logger.Info("Logger initialized", slog.String("level", config.Log.Level))
+	logger.Info("Logger initialized", "log_level", config.Log.Level)
 
 	return Logger{
 		Logger: logger,
-	}
-}
-
-// NewFxLogger returns a new fxevent.Logger that logs to the provided logger.
-func NewFxLogger(l Logger) fxevent.Logger {
-	return &fxevent.SlogLogger{
-		Logger: l.Logger.With("source", "fx"),
 	}
 }

@@ -15,22 +15,29 @@ weather:
       key: "your_gismeteo_api_key"
 
 maps:
-  api_type: "google"
+  api_type: "starline"
   apis:
     google:
       url: "https://maps.googleapis.com/maps/api/"
       key: "your_google_maps_key"
+    yandex:
+        url: "https://geocode-maps.yandex.ru/1.x/"
+        key: "your_yandex_maps_key"
+    starline:
+        url: "https://starline-online.ru/api/"
+        key: "your_starline_key"
 
 cache:
   type: "in-memory"
   ttl: "300s"
 
 log:
-  level: "info"
-  label: "weather-service"
+  level: debug
+  label: weather-service
   add_timestamp: "yes"
   time_format: "02/01/2006 15:04:05 MST"
   prefix: ""
   add_source: "yes"
   formatter: "text"
   source_format: "short"
+  enable_fx_logs: "no"
