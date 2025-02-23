@@ -8,9 +8,9 @@ import (
 	"os/signal"
 	"syscall"
 	"weather-cache/config"
+	"weather-cache/internal/api"
 	"weather-cache/internal/api/controller"
 	"weather-cache/internal/api/handler"
-	"weather-cache/internal/api/routes"
 	"weather-cache/internal/cache"
 	"weather-cache/internal/infrastructure/providers"
 	"weather-cache/internal/server"
@@ -19,21 +19,29 @@ import (
 	"weather-cache/pkg/logger"
 )
 
+var Module = fx.Options(
+	config.Module,
+	logger.Module,
+	weather.Module,
+	maps.Module,
+	cache.Module,
+	providers.Module,
+	controller.Module,
+	handler.Module,
+)
+
+var Invokes = fx.Invoke(
+	api.Setup,
+	server.Serve,
+)
+
 func main() {
 	stop := make(chan os.Signal, 1)
 	signal.Notify(stop, syscall.SIGINT, syscall.SIGTERM)
 
 	app := fx.New(
-		config.Module,
-		logger.Module,
-		weather.Module,
-		maps.Module,
-		cache.Module,
-		providers.Module,
-		controller.Module,
-		handler.Module,
-		fx.Invoke(routes.Setup),
-		fx.Invoke(server.Serve),
+		Module,
+		Invokes,
 	)
 
 	if err := app.Err(); err != nil {
