@@ -5,6 +5,7 @@ go 1.24
 require (
 	github.com/bytedance/sonic v1.12.9
 	github.com/charmbracelet/log v0.4.0
+	github.com/google/uuid v1.6.0
 	github.com/labstack/echo v3.3.10+incompatible
 	github.com/spf13/viper v1.19.0
 	go.uber.org/fx v1.23.0

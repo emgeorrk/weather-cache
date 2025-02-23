@@ -4,6 +4,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/labstack/echo"
 	"time"
+	"weather-cache/internal/constants"
 	"weather-cache/pkg/logger"
 )
 
@@ -24,6 +25,7 @@ func LoggerMiddleware(logger logger.Logger) echo.MiddlewareFunc {
 				"status", res.Status,
 				"latency", time.Since(start),
 				"remote_ip", c.RealIP(),
+				logger.RequestID(c.Get(constants.RequestID).(string)),
 			)
 
 			return err
@@ -37,7 +39,7 @@ func RequestIDMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
 		requestID := uuid.New().String()
 
 		c.Response().Header().Set("X-Request-ID", requestID)
-		c.Set("requestID", requestID)
+		c.Set(constants.RequestID, requestID)
 
 		return next(c)
 	}

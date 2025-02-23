@@ -12,3 +12,10 @@ func (l Logger) Err(err error) slog.Attr {
 		Value: slog.StringValue(err.Error()),
 	}
 }
+
+func (l Logger) RequestID(reqID string) slog.Attr {
+	return slog.Attr{
+		Key:   constants.LogRequestIDKey,
+		Value: slog.StringValue(reqID),
+	}
+}

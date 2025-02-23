@@ -1,4 +1,4 @@
-package routes
+package api
 
 import (
 	"weather-cache/internal/api/controller"
