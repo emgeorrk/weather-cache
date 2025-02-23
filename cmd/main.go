@@ -12,7 +12,7 @@ import (
 	"weather-cache/internal/api/controller"
 	"weather-cache/internal/api/handler"
 	"weather-cache/internal/cache"
-	"weather-cache/internal/infrastructure/providers"
+	"weather-cache/internal/providers"
 	"weather-cache/internal/server"
 	"weather-cache/internal/services/maps"
 	"weather-cache/internal/services/weather"

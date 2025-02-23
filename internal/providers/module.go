@@ -5,8 +5,8 @@ import (
 	"weather-cache/config"
 	"weather-cache/internal/constants"
 	"weather-cache/internal/domain"
-	"weather-cache/internal/infrastructure/providers/gismeteo"
-	"weather-cache/internal/infrastructure/providers/starline_maps"
+	"weather-cache/internal/providers/geo/starline_maps"
+	"weather-cache/internal/providers/weather/gismeteo"
 	"weather-cache/pkg/logger"
 )
 
