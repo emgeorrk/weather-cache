@@ -77,3 +77,19 @@ func NewLogger(config *config.Config) Logger {
 		Logger: logger,
 	}
 }
+
+// NewTestLogger creates a logger for testing purposes.
+func NewTestLogger() Logger {
+	log.Helper()
+
+	handler := log.NewWithOptions(os.Stderr, log.Options{
+		Level:     log.DebugLevel,
+		Formatter: log.TextFormatter,
+	})
+
+	logger := slog.New(handler)
+
+	return Logger{
+		Logger: logger,
+	}
+}
