@@ -9,9 +9,10 @@ import (
 
 func (c Controller) GetWeatherByCity(e echo.Context) error {
 	ctx := e.Request().Context()
-	c.log.Info("GetWeatherByCity", c.log.RequestID(ctx))
 
 	city := e.QueryParam("name")
+	c.log.Debug("GetWeatherByCity", "city", city, c.log.RequestID(ctx))
+
 	if city == "" {
 		c.log.Debug("City name is required", c.log.RequestID(ctx))
 
@@ -23,8 +24,6 @@ func (c Controller) GetWeatherByCity(e echo.Context) error {
 			},
 		})
 	}
-
-	c.log.Debug("GetWeatherByCity", "city", city, c.log.RequestID(ctx))
 
 	w, err := c.weatherService.GetWeatherByCity(ctx, city)
 	if err != nil {
