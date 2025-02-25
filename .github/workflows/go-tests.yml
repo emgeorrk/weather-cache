@@ -1,0 +1,34 @@
+name: Go Unit Tests
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  test:
+    name: Run Go Unit Tests
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.24'
+          cache: true
+
+      - name: Install dependencies
+        run: go mod download
+
+      - name: Run tests with coverage
+        run: go test ./... -coverprofile=coverage.txt
+
+      - name: Upload coverage report to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          file: ./coverage.txt
+          fail_ci_if_error: false
