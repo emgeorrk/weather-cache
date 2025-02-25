@@ -1,6 +1,7 @@
 package logger
 
 import (
+	"context"
 	"log/slog"
 	"weather-cache/internal/constants"
 )
@@ -13,9 +14,9 @@ func (l Logger) Err(err error) slog.Attr {
 	}
 }
 
-func (l Logger) RequestID(reqID string) slog.Attr {
+func (l Logger) RequestID(ctx context.Context) slog.Attr {
 	return slog.Attr{
 		Key:   constants.LogRequestIDKey,
-		Value: slog.StringValue(reqID),
+		Value: slog.AnyValue(ctx.Value(constants.RequestID)),
 	}
 }

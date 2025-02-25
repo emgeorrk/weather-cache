@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"context"
 	"github.com/google/uuid"
 	"github.com/labstack/echo"
 	"time"
@@ -25,7 +26,7 @@ func LoggerMiddleware(logger logger.Logger) echo.MiddlewareFunc {
 				"status", res.Status,
 				"latency", time.Since(start),
 				"remote_ip", c.RealIP(),
-				logger.RequestID(c.Get(constants.RequestID).(string)),
+				logger.RequestID(c.Request().Context()),
 			)
 
 			return err
@@ -38,8 +39,11 @@ func RequestIDMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		requestID := uuid.New().String()
 
+		ctx := context.WithValue(c.Request().Context(), constants.RequestID, requestID)
+
 		c.Response().Header().Set("X-Request-ID", requestID)
 		c.Set(constants.RequestID, requestID)
+		c.SetRequest(c.Request().WithContext(ctx))
 
 		return next(c)
 	}
