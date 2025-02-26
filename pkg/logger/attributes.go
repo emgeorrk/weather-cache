@@ -14,9 +14,18 @@ func (l Logger) Err(err error) slog.Attr {
 	}
 }
 
+// RequestID returns a slog.Attr with the request ID key and the request ID as a string value.
 func (l Logger) RequestID(ctx context.Context) slog.Attr {
 	return slog.Attr{
 		Key:   constants.LogRequestIDKey,
 		Value: slog.AnyValue(ctx.Value(constants.RequestID)),
+	}
+}
+
+// String returns a slog.Attr with the key and value as a string value.
+func (l Logger) String(key, value string) slog.Attr {
+	return slog.Attr{
+		Key:   key,
+		Value: slog.StringValue(value),
 	}
 }
