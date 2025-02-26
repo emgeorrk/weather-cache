@@ -39,6 +39,7 @@ type Log struct {
 	AddSource    string `mapstructure:"add_source"`
 	Formatter    string `mapstructure:"formatter"`
 	SourceFormat string `mapstructure:"source_format"`
+	EnableFxLogs string `mapstructure:"enable_fx_logs"`
 }
 
 type Config struct {

@@ -1,13 +1,14 @@
 package handler
 
 import (
-	"github.com/bytedance/sonic"
+	"encoding/json"
 	"github.com/labstack/echo"
 	"net/http"
+	"weather-cache/internal/model"
 )
 
-func SonicJSON(e echo.Context, statusCode int, data interface{}) error {
-	jsonBytes, err := sonic.Marshal(data)
+func Return(e echo.Context, statusCode int, data model.APIResponse) error {
+	jsonBytes, err := json.Marshal(data)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "Failed to marshal response")
 	}

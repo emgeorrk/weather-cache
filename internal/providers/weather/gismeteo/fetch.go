@@ -17,7 +17,7 @@ func (g API) FetchWeather(ctx context.Context, city model.Location) (model.Weath
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, endpoint, nil)
 	if err != nil {
-		g.log.Error("failed to create request", "error", err)
+		g.log.Error("failed to create request", g.log.Err(err))
 		return model.Weather{}, errors.Join(constants.ErrRemoteServerOut, err)
 	}
 
@@ -26,13 +26,13 @@ func (g API) FetchWeather(ctx context.Context, city model.Location) (model.Weath
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
-		g.log.Error("failed to send request", "error", err)
+		g.log.Error("failed to send request", g.log.Err(err))
 		return model.Weather{}, errors.Join(constants.ErrRemoteServerOut, err)
 	}
 	defer func(Body io.ReadCloser) {
 		err := Body.Close()
 		if err != nil {
-			g.log.Error("failed to close response body", "error", err)
+			g.log.Error("failed to close response body", g.log.Err(err))
 		}
 	}(resp.Body)
 
@@ -40,7 +40,7 @@ func (g API) FetchWeather(ctx context.Context, city model.Location) (model.Weath
 
 	err = json.NewDecoder(resp.Body).Decode(&res)
 	if err != nil {
-		g.log.Error("failed to decode response", "error", err)
+		g.log.Error("failed to decode response", g.log.Err(err))
 		return model.Weather{}, errors.Join(constants.ErrConverting, err)
 	}
 

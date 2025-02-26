@@ -1,5 +1,6 @@
 package constants
 
 const (
-	LogErrorKey = "error"
+	LogErrorKey     = "error"
+	LogRequestIDKey = RequestID
 )
