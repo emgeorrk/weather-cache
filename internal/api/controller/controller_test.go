@@ -64,7 +64,7 @@ func TestControllerGetWeatherByCity(t *testing.T) {
 				// No expectations
 			},
 			wantCode: http.StatusBadRequest,
-			wantJSON: `{"code":400,"error":"Bad Request","message":"City name is required"}`,
+			wantJSON: `{"code":400,"error":"Bad Request","message":"city name is required"}`,
 		},
 		{
 			name: "weatherService error",
@@ -77,7 +77,7 @@ func TestControllerGetWeatherByCity(t *testing.T) {
 					Return(model.Weather{}, constants.ErrRemoteServerOut)
 			},
 			wantCode: http.StatusInternalServerError,
-			wantJSON: `{"code":500,"error":"Internal Server Error","message":"Failed to get weather by city"}`,
+			wantJSON: `{"code":500,"error":"Internal Server Error","message":"failed to get weather by city: remote server is out"}`,
 		},
 	}
 
@@ -176,7 +176,7 @@ func TestControllerGetWeatherByCoords(t *testing.T) {
 				// No expectations
 			},
 			wantCode: http.StatusBadRequest,
-			wantJSON: `{"code":400,"error":"Bad Request","message":"Invalid latitude"}`,
+			wantJSON: `{"code":400,"error":"Bad Request","message":"invalid latitude"}`,
 		},
 		{
 			name: "Invalid longitude",
@@ -188,7 +188,7 @@ func TestControllerGetWeatherByCoords(t *testing.T) {
 				// No expectations
 			},
 			wantCode: http.StatusBadRequest,
-			wantJSON: `{"code":400,"error":"Bad Request","message":"Invalid longitude"}`,
+			wantJSON: `{"code":400,"error":"Bad Request","message":"invalid longitude"}`,
 		},
 		{
 			name: "weatherService error",
@@ -202,7 +202,7 @@ func TestControllerGetWeatherByCoords(t *testing.T) {
 					Return(model.Weather{}, constants.ErrRemoteServerOut)
 			},
 			wantCode: http.StatusInternalServerError,
-			wantJSON: `{"code":500,"error":"Internal Server Error","message":"Failed to get weather by coordinates"}`,
+			wantJSON: `{"code":500,"error":"Internal Server Error","message":"failed to get weather by coordinates: remote server is out"}`,
 		},
 	}
 

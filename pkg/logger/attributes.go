@@ -29,3 +29,9 @@ func (l Logger) String(key, value string) slog.Attr {
 		Value: slog.StringValue(value),
 	}
 }
+
+func (l Logger) With(attr slog.Attr) Logger {
+	return Logger{
+		Logger: l.Logger.With(attr),
+	}
+}
